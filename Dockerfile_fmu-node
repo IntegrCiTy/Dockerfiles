@@ -1,0 +1,30 @@
+FROM continuumio/miniconda3
+
+# ImportError: libgfortran.so.3
+RUN apt-get install -y libgfortran3
+# https://github.com/ContinuumIO/anaconda-issues/issues/686 ?
+
+RUN conda create --name ict-env python=3.5
+
+RUN /bin/bash -c "source activate ict-env && conda install -y -c chria pyfmi=2.4"
+RUN /bin/bash -c "source activate ict-env && pip install --ignore-installed -U setuptools"
+
+RUN mkdir code
+WORKDIR code
+
+RUN git clone -b develop https://github.com/IntegrCiTy/obnl.git
+RUN /bin/bash -c "source activate ict-env && pip install --no-cache-dir -r obnl/requirements.txt"
+
+RUN /bin/bash -c "source activate ict-env && cd obnl && python setup.py install"
+
+RUN git clone https://github.com/IntegrCiTy/ict-demo-GA.git
+RUN /bin/bash -c "source activate ict-env && pip install --no-cache-dir -r ict-demo-GA/requirements.txt"
+
+RUN echo "from obnl.client import ClientNode" >> error.py
+RUN echo "import pyfmi" >> error.py
+RUN echo "print('OK !')" >> error.py
+
+ENV USER root
+
+ENTRYPOINT [ "/bin/bash", "-c", "source activate ict-env && python error.py"]
+# CMD ["source activate ict-env && python ict-demo-GA/models_wrap/thermal_network.py"]
