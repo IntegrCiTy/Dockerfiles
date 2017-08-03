@@ -17,4 +17,4 @@ ENV ICT_HOST ""
 
 ENTRYPOINT ["/usr/local/bin/python", "obnl/obnl/server.py", "${ICT_HOST}", "DemoGA/data/${ICT_RUN_FILE}", "DemoGA/data/${ICT_SCE_FILE}"]
 
-# # docker run -it --rm --env ICT_RUN_FILE=run.json --env ICT_SCE_FILE=sce.json --env ICT_HOST=localhost? orch
+# # docker run -it --rm --env ICT_RUN_FILE=run.json --env ICT_SCE_FILE=sce.json --env ICT_HOST=localhost? integrcity/orchestrator
