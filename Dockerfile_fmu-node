@@ -20,19 +20,11 @@ RUN /bin/bash -c "source activate ict-env && cd obnl && python setup.py install"
 RUN git clone https://github.com/IntegrCiTy/DemoGA.git
 RUN /bin/bash -c "source activate ict-env && pip install --no-cache-dir -r DemoGA/requirements.txt"
 
-
-RUN echo "import sys" >> DemoGA/wrappers/error.py
-RUN echo "from common.node_fmu import NodeFMU" >> DemoGA/wrappers/error.py
-RUN echo "print('NodeFMU imported !')" >> DemoGA/wrappers/error.py
-RUN echo "print('ARG:', sys.argv[1])" >> DemoGA/wrappers/error.py
-
-RUN echo "#!/bin/sh" >> entrypoint.sh
-RUN echo "/bin/bash -c source activate ict-env" >> entrypoint.sh
-RUN echo "python DemoGA/wrappers/error.py "$1""
-
-RUN chmod +x entrypoint.sh
-
 ENV USER root
 
-# ENTRYPOINT ["/bin/bash", "-c", "source activate ict-env && python DemoGA/wrappers/hp_central.py"]
-ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]
+ENV ICT_FILE ""
+ENV ICT_HOST ""
+
+ENTRYPOINT ["/bin/bash", "-c", "source activate ict-env && python DemoGA/wrappers/${ICT_FILE} ${ICT_HOST}"]
+
+# docker run -it --rm --env ICT_FILE=hp_central.py --env ICT_HOST=localhost? node
