@@ -12,7 +12,7 @@ RUN /bin/bash -c "source activate ict-env && pip install --ignore-installed -U s
 RUN mkdir code
 WORKDIR code
 
-RUN git clone -b develop https://github.com/ppuertocrem/obnl.git
+RUN git clone -b feature/logging https://github.com/IntegrCiTy/obnl.git
 RUN /bin/bash -c "source activate ict-env && pip install --no-cache-dir -r obnl/requirements.txt"
 
 RUN /bin/bash -c "source activate ict-env && cd obnl && python setup.py install"
@@ -22,9 +22,8 @@ RUN /bin/bash -c "source activate ict-env && pip install --no-cache-dir -r DemoG
 
 ENV USER root
 
-ENV ICT_FILE ""
-ENV ICT_HOST ""
+ENV PATH /opt/conda/envs/ict-env/bin:$PATH
 
-ENTRYPOINT ["/bin/bash", "-c", "source activate ict-env && python DemoGA/wrappers/${ICT_FILE} ${ICT_HOST}"]
+ENTRYPOINT ["python"]
 
-# docker run -it --rm --env ICT_FILE=hp_central.py --env ICT_HOST=localhost integrcity/node
+# docker run -it --rm integrcity/node DemoGA/wrappers/<ICT_FILE.py> <IP_RABBIT> 
