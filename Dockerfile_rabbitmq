@@ -1,0 +1,5 @@
+FROM rabbitmq:alpine
+
+RUN echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
+
+# docker run -it -p 5672:5672 integrcity/rabbitmq
